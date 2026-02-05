@@ -1,0 +1,3 @@
+C:/Users/brady/CLionProjects/GoToTrackerModules/cmake-build-debug/CMakeFiles/GoToTrackerModules.dir
+C:/Users/brady/CLionProjects/GoToTrackerModules/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/brady/CLionProjects/GoToTrackerModules/cmake-build-debug/CMakeFiles/rebuild_cache.dir
