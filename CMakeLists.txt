@@ -17,4 +17,6 @@ add_executable(GoToTrackerModules main.cpp
         core/MountModel.cpp
         core/AxisController.h
         core/AxisController.cpp
+        core/TargetCatalog.h
+        core/TargetCatalog.cpp
 )

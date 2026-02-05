@@ -73,6 +73,12 @@ build CMakeFiles/GoToTrackerModules.dir/core/AxisController.cpp.obj: CXX_COMPILE
   OBJECT_DIR = CMakeFiles\GoToTrackerModules.dir
   OBJECT_FILE_DIR = CMakeFiles\GoToTrackerModules.dir\core
 
+build CMakeFiles/GoToTrackerModules.dir/core/TargetCatalog.cpp.obj: CXX_COMPILER__GoToTrackerModules_unscanned_Debug C$:/Users/brady/CLionProjects/GoToTrackerModules/core/TargetCatalog.cpp || cmake_object_order_depends_target_GoToTrackerModules
+  DEP_FILE = CMakeFiles\GoToTrackerModules.dir\core\TargetCatalog.cpp.obj.d
+  FLAGS = -g -std=c++11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\GoToTrackerModules.dir
+  OBJECT_FILE_DIR = CMakeFiles\GoToTrackerModules.dir\core
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target GoToTrackerModules
@@ -81,7 +87,7 @@ build CMakeFiles/GoToTrackerModules.dir/core/AxisController.cpp.obj: CXX_COMPILE
 #############################################
 # Link the executable GoToTrackerModules.exe
 
-build GoToTrackerModules.exe: CXX_EXECUTABLE_LINKER__GoToTrackerModules_Debug CMakeFiles/GoToTrackerModules.dir/main.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/SkyMath.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/MountModel.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/AxisController.cpp.obj
+build GoToTrackerModules.exe: CXX_EXECUTABLE_LINKER__GoToTrackerModules_Debug CMakeFiles/GoToTrackerModules.dir/main.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/SkyMath.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/MountModel.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/AxisController.cpp.obj CMakeFiles/GoToTrackerModules.dir/core/TargetCatalog.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\GoToTrackerModules.dir
