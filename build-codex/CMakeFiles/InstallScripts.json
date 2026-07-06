@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"E:/goto/GoToTrackerModules/build-codex/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

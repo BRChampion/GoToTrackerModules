@@ -1,3 +1,0 @@
-E:/goto/GoToTrackerModules/build-codex/CMakeFiles/GoToTrackerModules.dir
-E:/goto/GoToTrackerModules/build-codex/CMakeFiles/edit_cache.dir
-E:/goto/GoToTrackerModules/build-codex/CMakeFiles/rebuild_cache.dir

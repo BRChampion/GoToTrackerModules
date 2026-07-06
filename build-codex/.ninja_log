@@ -1,9 +1,0 @@
-# ninja log v7
-22	103	8050816784329783	CMakeFiles/GoToTrackerModules.dir/core/TargetCatalog.cpp.obj	a3c0cff8eafaa8ab
-13	127	8050816784248665	CMakeFiles/GoToTrackerModules.dir/core/MountModel.cpp.obj	ea7d977d1b517068
-9	131	8050816784203169	CMakeFiles/GoToTrackerModules.dir/core/SkyMath.cpp.obj	4d1bbb3b01c98bf5
-17	143	8050816784289780	CMakeFiles/GoToTrackerModules.dir/core/AxisController.cpp.obj	299d3e8974b843d0
-4	933	8050816784162139	CMakeFiles/GoToTrackerModules.dir/main.cpp.obj	14c348f4092bcd04
-934	1083	8050816793458072	GoToTrackerModules.exe	f0cb0a342862573a
-23	174	8050817448888235	build.ninja	3a4f162c1dc9debd
-23	174	8050817448888235	E:/goto/GoToTrackerModules/build-codex/cmake_install.cmake	3a4f162c1dc9debd
