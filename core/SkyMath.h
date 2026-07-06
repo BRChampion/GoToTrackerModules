@@ -1,18 +1,40 @@
 #pragma once
+#include "TrackerTypes.h"
 
 namespace SkyMath {
+    struct EquatorialCoord {
+        float raHours;
+        AngleDeg decDeg;
+    };
+
+    struct HorizontalCoord {
+        AngleDeg altDeg;
+        AngleDeg azDeg;
+    };
+
     // Wrap angle into (0, 360)
-    double wrapDeg(double deg);
+    AngleDeg wrapDeg(AngleDeg deg);
 
     // Wrap angle into (-180, +180) -> makes GoTo cleaner
-    double wrapSignedDeg(double deg);
+    AngleDeg wrapSignedDeg(AngleDeg deg);
 
-    // Unix seconds → Julian date
-    double julianDateFromUnix(long long unixSeconds);
+    // Unix seconds -> Julian date. Prefer lstDegFromUnix() on AVR.
+    float julianDateFromUnix(UnixSeconds unixSeconds);
 
-    // Julian date + longitude → local sidereal time (deg)
-    double lstDeg(double jd, double lonDeg);
+    // Julian date + longitude -> local sidereal time (deg)
+    float lstDeg(float jd, AngleDeg lonDeg);
 
-    // Hour angle = LST − RA
-    double haDeg(double lstDeg, double raDeg);
+    // Unix seconds + longitude -> local sidereal time (deg), AVR-friendlier.
+    AngleDeg lstDegFromUnix(UnixSeconds unixSeconds, AngleDeg lonDeg);
+
+    // Hour angle = LST - RA
+    AngleDeg haDeg(AngleDeg lstDeg, AngleDeg raDeg);
+
+    AngleDeg raHoursToDeg(float raHours);
+
+    // Convert RA/Dec target to Alt/Az for a local observer.
+    HorizontalCoord equatorialToHorizontal(
+        EquatorialCoord target,
+        AngleDeg lstDeg,
+        AngleDeg observerLatDeg);
 }

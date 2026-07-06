@@ -1,6 +1,6 @@
 #pragma once
 #include "Driver.h"
-#include <cstdint>
+#include "TrackerTypes.h"
 
 class FakeDriver : public Driver {
 public:
@@ -12,6 +12,6 @@ public:
     }
 
     bool enabled = false;
-    int64_t posSteps = 0;
-    uint64_t totalPulses = 0;
+    StepCount posSteps = 0;
+    uint32_t totalPulses = 0;
 };

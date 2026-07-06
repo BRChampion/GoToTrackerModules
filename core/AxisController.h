@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include "Clock.h"
 #include "Driver.h"
+#include "TrackerTypes.h"
 
 // AxisController
 //  - Owns control logic for ONE axis (RA/Dec)
@@ -30,20 +30,20 @@ public:
     Mode mode() const {return _mode; }
     bool enabled() const {return _enabled; }
 
-    int64_t posSteps() const {return _posSteps; }
-    void setPosSteps (int64_t steps) {_posSteps  = steps; }
+    StepCount posSteps() const {return _posSteps; }
+    void setPosSteps (StepCount steps) {_posSteps  = steps; }
 
-    int64_t targetSteps() const {return _targetSteps; }
-    bool atTarget(int64_t toleranceSteps = 0) const;
+    StepCount targetSteps() const {return _targetSteps; }
+    bool atTarget(StepCount toleranceSteps = 0) const;
 
     // ----- Rate mode (tracking) -----
     // Note: stepsPerSec can be fractional, sign determines direction
-    void startRate(double stepsPerSec);
+    void startRate(RateStepsPerSec stepsPerSec);
 
     // ----- Goto mode -----
     // Move toward targetSteps at (up to) maxStepsPerSec
     // Note: maxStepsPerSec MUST be > 0
-    void startGoto(int64_t targetSteps, double maxStepsPerSec);
+    void startGoto(StepCount targetSteps, RateStepsPerSec maxStepsPerSec);
 
     // Stop motion
     void stop();
@@ -54,11 +54,11 @@ public:
 
 private:
     // Schedule helper: decides if it's time for next step
-    bool timeForStep(uint64_t nowUs, uint64_t intervalUs);
+    bool timeForStep(TickMicros nowUs, TickMicros intervalUs);
 
     // Compute interval between steps from steps/sec
     // Returns zero for invalid rate (<= 0)
-    static uint64_t intervalUsFromRate(double stepsPerSecAbs);
+    static TickMicros intervalUsFromRate(RateStepsPerSec stepsPerSecAbs);
 
 private:
     Clock& _clock;
@@ -68,17 +68,17 @@ private:
     bool _enabled = false;
 
     // Unbounded axis position (in steps)
-    int64_t _posSteps  = 0;
+    StepCount _posSteps  = 0;
 
     // GOTO target
-    int64_t _targetSteps = 0;
+    StepCount _targetSteps = 0;
 
     // For RATE mode
-    double _rateStepsPerSec = 0.0;
+    RateStepsPerSec _rateStepsPerSec = 0.0f;
 
     // For GOTO mode
-    double _maxGotoStepsPerSec = 0.0;
+    RateStepsPerSec _maxGotoStepsPerSec = 0.0f;
 
     // Timing state (steady interval scheduling)
-    uint64_t _lastStepMicros = 0;
+    TickMicros _lastStepMicros = 0;
 };

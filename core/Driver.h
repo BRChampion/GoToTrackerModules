@@ -1,6 +1,7 @@
 #pragma once
+#include <stdint.h>
 
-enum class StepDir { Forward = 1, Backward = -1 };
+enum class StepDir : int8_t { Forward = 1, Backward = -1 };
 
 struct Driver {
     virtual ~Driver() = default;

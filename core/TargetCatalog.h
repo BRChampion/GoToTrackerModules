@@ -1,16 +1,16 @@
 #pragma once
-#include <cstddef>
+#include <stdint.h>
 
 struct TargetEq {
     const char* name;
-    double raHours; // Right Ascension in hours
-    double decDeg;  // Declination in degrees
+    float raHours; // Right Ascension in hours
+    float decDeg;  // Declination in degrees
 };
 
 namespace TargetCatalog {
     const TargetEq* list();
-    std::size_t count();
-    const TargetEq& get(std::size_t i);
+    uint8_t count();
+    const TargetEq& get(uint8_t i);
 }
 
 

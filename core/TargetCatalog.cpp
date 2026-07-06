@@ -20,7 +20,7 @@ namespace TargetCatalog {
 
     const TargetEq* list() {return TARGETS;}
 
-    std::size_t count() {return sizeof(TARGETS)/sizeof(TARGETS[0]);}
+    uint8_t count() {return sizeof(TARGETS)/sizeof(TARGETS[0]);}
 
-    const TargetEq& get(std::size_t i) {return TARGETS[i];}
+    const TargetEq& get(uint8_t i) {return TARGETS[i];}
 }

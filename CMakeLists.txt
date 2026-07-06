@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(GoToTrackerModules main.cpp
         core/Clock.h
+        core/TrackerTypes.h
         core/SimClock.h
         core/Driver.h
         core/FakeDriver.h

@@ -1,17 +1,17 @@
 #pragma once
-#include <cstdint>
+#include "TrackerTypes.h"
 
 class MountModel {
 public:
-    MountModel(double motorStepsPerRev, double totalRatioMotorToAxis);
+    MountModel(float motorStepsPerRev, float totalRatioMotorToAxis);
 
-    double stepsPerAxisRev() const;
-    double stepsPerDeg() const;
+    float stepsPerAxisRev() const;
+    float stepsPerDeg() const;
 
     // degrees -> signed steps (rounding to nearest)
-    int64_t degToSteps(double deg) const;
+    StepCount degToSteps(AngleDeg deg) const;
 
 private:
-    double _motorStepsPerRev;
-    double _ratio;
+    float _motorStepsPerRev;
+    float _ratio;
 };
