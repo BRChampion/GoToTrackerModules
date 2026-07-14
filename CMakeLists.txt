@@ -16,6 +16,10 @@ add_executable(GoToTrackerModules main.cpp
         core/SkyMath.cpp
         core/MountModel.h
         core/MountModel.cpp
+        core/AltAzTracker.h
+        core/AltAzTracker.cpp
+        core/CommandInterface.h
+        core/CommandInterface.cpp
         core/AxisController.h
         core/AxisController.cpp
         core/TargetCatalog.h

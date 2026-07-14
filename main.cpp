@@ -2,46 +2,71 @@
 #include "core/SimClock.h"
 #include "core/FakeDriver.h"
 #include "core/AxisController.h"
-#include "core/SkyMath.h"
-#include "core/TargetCatalog.h"
+#include "core/MountModel.h"
+#include "core/AltAzTracker.h"
+#include "core/CommandInterface.h"
+
+class ConsoleOutput : public CommandOutput {
+public:
+    void print(const char* text) override { std::cout << text; }
+    void printInt(int32_t value) override { std::cout << value; }
+    void printFloat(float value) override { std::cout << value; }
+    void println(const char* text) override { std::cout << text << "\n"; }
+};
+
+static void runCommand(CommandInterface& commands, const char* text) {
+    char buffer[32];
+    uint8_t i = 0;
+    while (text[i] != '\0' && i < sizeof(buffer) - 1) {
+        buffer[i] = text[i];
+        ++i;
+    }
+    buffer[i] = '\0';
+
+    std::cout << "> " << buffer << "\n";
+    commands.handleLine(buffer);
+}
 
 int main() {
     SimClock clk;
-    FakeDriver drv;
-    AxisController axis(clk, drv);
+    FakeDriver altDriver;
+    FakeDriver azDriver;
+    AxisController altAxis(clk, altDriver);
+    AxisController azAxis(clk, azDriver);
 
-    axis.begin();
-    axis.enable(true);
+    MountModel altModel(200.0f, 16.0f);
+    MountModel azModel(200.0f, 16.0f);
+    AltAzTracker tracker(clk, altAxis, azAxis, altModel, azModel);
+    ConsoleOutput out;
+    CommandInterface commands(tracker, altAxis, azAxis, out);
 
-    // Test 1: Rate mode at +100 steps/sec for 2 seconds
-    axis.startRate(100.0f);
+    altAxis.begin();
+    azAxis.begin();
+    altAxis.enable(true);
+    azAxis.enable(true);
 
-    for (int i = 0; i < 2000; i++) {
-        clk.advanceMicros(1000); // 1 ms tick
-        axis.update();
+    tracker.begin();
+    tracker.setObserver(47.6f, -52.7f);
+    tracker.setTime(1783353600UL);
+
+    runCommand(commands, "help");
+    runCommand(commands, "target Vega");
+    runCommand(commands, "goto");
+
+    for (uint16_t i = 0; i < 2000; ++i) {
+        clk.advanceMicros(1000UL);
+        tracker.update();
     }
 
-    std::cout << "[Rate] posSteps=" << axis.posSteps()
-              << " pulses=" << drv.totalPulses << "\n";
+    runCommand(commands, "status");
+    runCommand(commands, "track on");
 
-    // Test 2: Goto mode to step 1000 at 500 steps/sec
-    axis.startGoto(-500, 500.0f);
-
-    for (int i = 0; i < 5000; i++) {
-        clk.advanceMicros(1000);
-        axis.update();
-        if (axis.mode() == AxisController::Mode::Idle) break;
+    for (uint16_t i = 0; i < 3000; ++i) {
+        clk.advanceMicros(1000UL);
+        tracker.update();
     }
 
-    std::cout << "[Goto] posSteps=" << axis.posSteps()
-              << " target=" << axis.targetSteps()
-              << " pulses=" << drv.totalPulses << "\n";
-
-    const TargetEq& vega = TargetCatalog::get(0);
-    const SkyMath::EquatorialCoord eq = {vega.raHours, vega.decDeg};
-    const float lst = SkyMath::lstDegFromUnix(1783353600UL, -52.7f);
-    const SkyMath::HorizontalCoord hz = SkyMath::equatorialToHorizontal(eq, lst, 47.6f);
-
-    std::cout << "[AltAz] altDeg=" << hz.altDeg
-              << " azDeg=" << hz.azDeg << "\n";
+    runCommand(commands, "status");
+    runCommand(commands, "stop");
+    runCommand(commands, "status");
 }

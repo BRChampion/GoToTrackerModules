@@ -12,6 +12,10 @@ float MountModel::stepsPerAxisRev() const {
     return _motorStepsPerRev * _ratio;
 }
 
+StepCount MountModel::stepsPerAxisRevRounded() const {
+    return (StepCount)lroundf(stepsPerAxisRev());
+}
+
 // Return # of steps that correspond to *1* degree of axis rotation
 // Used for - converting target sky angles -> step targets
 //          - computing tracking rates in steps/sec

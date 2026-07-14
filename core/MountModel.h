@@ -6,6 +6,7 @@ public:
     MountModel(float motorStepsPerRev, float totalRatioMotorToAxis);
 
     float stepsPerAxisRev() const;
+    StepCount stepsPerAxisRevRounded() const;
     float stepsPerDeg() const;
 
     // degrees -> signed steps (rounding to nearest)
