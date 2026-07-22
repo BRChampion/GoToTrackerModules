@@ -61,10 +61,9 @@ TickMicros AxisController::intervalUsFromRate(RateStepsPerSec stepsPerSecAbs) {
     return static_cast<TickMicros>(interval);
 }
 
+// Advance from the previous scheduled time to preserve a steady
+// long-term interval and prevent small delays from accumulating.
 bool AxisController::timeForStep(TickMicros nowUs, TickMicros intervalUs) {
-   // Steady-interval scheduling
-   // Advancing _lastStepMicros by intervalUs should reduce jitter
-   // and avoid bursts after stalls
     if (intervalUs <= 0) return false;
 
     if ((TickMicros)(nowUs - _lastStepMicros) >= intervalUs) {

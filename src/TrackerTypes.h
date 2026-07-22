@@ -7,4 +7,3 @@ typedef float RateStepsPerSec;
 typedef int32_t StepCount;
 typedef uint32_t TickMicros;
 typedef uint32_t UnixSeconds;
-

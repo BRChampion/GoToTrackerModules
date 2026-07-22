@@ -1,6 +1,6 @@
 #pragma once
-#include "Driver.h"
-#include "TrackerTypes.h"
+#include "../src/Driver.h"
+#include "../src/TrackerTypes.h"
 
 class FakeDriver : public Driver {
 public:

@@ -1,5 +1,5 @@
 #pragma once
-#include "Clock.h"
+#include "../src/Clock.h"
 
 class SimClock : public Clock {
 public:

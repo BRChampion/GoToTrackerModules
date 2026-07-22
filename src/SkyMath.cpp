@@ -5,7 +5,7 @@ namespace SkyMath {
     static const float DegToRad = 0.017453292519943295f;
     static const float RadToDeg = 57.29577951308232f;
 
-    // Wrap to (0, 360)
+    // Wrap to [0, 360)
     AngleDeg wrapDeg(AngleDeg deg) {
         deg = fmodf(deg, 360.0f);
         if (deg < 0.0f) deg += 360.0f;
@@ -26,7 +26,7 @@ namespace SkyMath {
     }
 
     // Compute LST in degrees (adapted from astronomical references).
-    // Result is wrapped to (0, 360).
+    // Result is wrapped to [0, 360).
     float lstDeg(float jd, AngleDeg lonDeg) {
         float T = (jd - 2451545.0f) / 36525.0f;
 
@@ -40,25 +40,33 @@ namespace SkyMath {
     }
 
     AngleDeg lstDegFromUnix(UnixSeconds unixSeconds, AngleDeg lonDeg) {
-        const uint64_t secondsPerDay = 86400LL;
-        const uint64_t j2000Unix = 946728000LL; // J2000.0 reference date -> 2000-01-01 12:00:00 UTC
+        const uint32_t secondsPerDay = 86400UL;
+        const uint32_t j2000Unix = 946728000UL;
 
-        int64_t deltaSeconds = (int64_t)(unixSeconds - j2000Unix); // Seconds since J2000.0
-        int64_t days = deltaSeconds / (int64_t)secondsPerDay; // Whole days since J2000.0
-        int64_t secondsToday = deltaSeconds % (int64_t)secondsPerDay; // Seconds since midnight today
-        // Adjust for negative secondsToday if necessary
-        if (secondsToday < 0) {
-            secondsToday += secondsPerDay;
-            days -= 1;
+        int32_t days;
+        uint32_t secondsToday;
+        if (unixSeconds >= j2000Unix) {
+            const uint32_t elapsed = unixSeconds - j2000Unix;
+            days = (int32_t)(elapsed / secondsPerDay);
+            secondsToday = elapsed % secondsPerDay;
+        } else {
+            const uint32_t elapsed = j2000Unix - unixSeconds;
+            const uint32_t remainder = elapsed % secondsPerDay;
+            days = -(int32_t)(elapsed / secondsPerDay);
+            if (remainder != 0U) {
+                --days;
+                secondsToday = secondsPerDay - remainder;
+            } else {
+                secondsToday = 0U;
+            }
         }
-        // Compute GMST using the simplified formula
-        // This is split into three parts to avoid large numbers and maintain precision
-        float gst =
-            280.46061837f + // GMST at J2000.0 in degrees (starting offset)
-            0.98564736629f * (float)days + // Accumulater sidereal drift over whole days
-            0.004178074622f * (float)secondsToday; // Sidereal rotation during the current day
 
-        return wrapDeg(gst + lonDeg); // Wrap to (0, 360) and add observer's longitude
+        float gst =
+            280.46061837f +
+            0.98564736629f * (float)days +
+            0.004178074622f * (float)secondsToday;
+
+        return wrapDeg(gst + lonDeg);
     }
 
     // Compute HA in degrees, return in signed form.

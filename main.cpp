@@ -1,10 +1,10 @@
 #include <iostream>
 #include "core/SimClock.h"
 #include "core/FakeDriver.h"
-#include "core/AxisController.h"
-#include "core/MountModel.h"
-#include "core/AltAzTracker.h"
-#include "core/CommandInterface.h"
+#include "AxisController.h"
+#include "MountModel.h"
+#include "AltAzTracker.h"
+#include "CommandInterface.h"
 
 class ConsoleOutput : public CommandOutput {
 public:

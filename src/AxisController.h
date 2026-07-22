@@ -5,7 +5,7 @@
 #include "TrackerTypes.h"
 
 // AxisController
-//  - Owns control logic for ONE axis (RA/Dec)
+//  - Owns control logic for one mount axis
 //  - Schedules steps at steady intervals
 //  - Supports two modes:
 //          1) RATE : continuous stepping at fixed rate (steps/sec)
