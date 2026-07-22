@@ -1,7 +1,0 @@
-scenario,command,command_value,tick_us,simulated_duration_us,start_pos,final_pos,target_pos,scenario_pulses,cumulative_pulses,first_step_us,last_step_us,passed
-original_rate_100,rate_steps_per_sec,100,1000,2000000,0,200,0,200,200,10000,2000000,true
-original_goto_negative_500,goto_max_steps_per_sec,500,1000,1400000,200,-500,-500,700,900,2000,1400000,true
-fractional_rate_negative_37_5,rate_steps_per_sec,-37.5,1000,4000000,0,-150,0,150,150,27000,4000000,true
-micros_rollover_rate_1000,rate_steps_per_sec,1000,1000,10000,0,10,0,10,10,1000,10000,true
-mount_model_ratio_16,angle_degrees,45,0,0,0,400,400,0,0,0,0,true
-mount_model_ratio_32,angle_degrees,45,0,0,0,800,800,0,0,0,0,true

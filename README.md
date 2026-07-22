@@ -40,19 +40,3 @@ short `delayMicroseconds()` duration configured on `StepDirDriver`.
 For a two-axis mount, construct two drivers, controllers, and mount models. The
 optional `AltAzTracker` coordinates both controllers, while `SkyMath` and
 `MountModel` can also be used independently.
-
-## Desktop SIL tests
-
-The `SilTests` executable uses `SimClock` and `FakeDriver` to reproduce the
-original rate and goto tests and write deterministic comparison data. Build and
-run it through CTest:
-
-```text
-cmake -S . -B build-codex -G Ninja
-cmake --build build-codex
-ctest --test-dir build-codex --output-on-failure
-```
-
-Results are written to `sil-data/desktop_sil_summary.csv` and
-`sil-data/desktop_sil_trace.csv`. The expanded expected-versus-calculated
-matrix is written to `sil-data/desktop_sil_comparisons.csv`.
