@@ -43,6 +43,9 @@ namespace SkyMath {
         const uint32_t secondsPerDay = 86400UL;
         const uint32_t j2000Unix = 946728000UL;
 
+        // Keep the large Unix timestamp in integer math, then split it into
+        // smaller day/second values before converting to float. This avoids
+        // losing the fractional-day precision that a float Julian Date loses.
         int32_t days;
         uint32_t secondsToday;
         if (unixSeconds >= j2000Unix) {
@@ -96,6 +99,7 @@ namespace SkyMath {
         const float cosHa = cosf(haRad);
 
         float sinAlt = sinDec * sinLat + cosDec * cosLat * cosHa;
+        // Clamp small float overshoots so asinf() stays in its valid domain.
         if (sinAlt > 1.0f) sinAlt = 1.0f;
         if (sinAlt < -1.0f) sinAlt = -1.0f;
 

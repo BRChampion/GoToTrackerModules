@@ -12,6 +12,8 @@ public:
     virtual void println(const char* text) = 0;
 };
 
+// Minimal serial-monitor style command parser. The input line is modified in
+// place while tokenizing, so callers should pass a writable char buffer.
 class CommandInterface {
 public:
     CommandInterface(AltAzTracker& tracker,
@@ -25,6 +27,7 @@ private:
     void printHelp();
     void printStatus();
     void selectTarget(const char* arg);
+    void nudgeAxis(const char* axisName, const char* stepText);
     int8_t parseTargetIndex(const char* arg) const;
 
 private:

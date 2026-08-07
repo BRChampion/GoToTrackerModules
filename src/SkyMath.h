@@ -2,6 +2,8 @@
 #include "TrackerTypes.h"
 
 namespace SkyMath {
+    // Catalog and command inputs are equatorial; Alt/Az mounts need horizontal
+    // coordinates computed for the observer's time and location.
     struct EquatorialCoord {
         float raHours;
         AngleDeg decDeg;

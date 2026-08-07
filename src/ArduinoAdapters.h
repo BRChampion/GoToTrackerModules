@@ -46,6 +46,8 @@ public:
     void step(StepDir direction) override {
         digitalWrite(_directionPin,
                      direction == StepDir::Forward ? HIGH : LOW);
+        // TB6600-style STEP/DIR drivers need a short high pulse on STEP.
+        // This is the only intentional blocking delay in the motion path.
         digitalWrite(_stepPin, HIGH);
         delayMicroseconds(_pulseWidthMicros);
         digitalWrite(_stepPin, LOW);
@@ -78,6 +80,8 @@ public:
         : _input(input), _commands(commands) {}
 
     void update() {
+        // Drain all currently available serial bytes, but never wait for more.
+        // Complete newline-terminated commands are passed to CommandInterface.
         while (_input.available() > 0) {
             const char ch = (char)_input.read();
             if (ch == '\r') continue;

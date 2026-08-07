@@ -1,3 +1,5 @@
 build-codex/
+cmake-build-debug/
 .agents/
 sil-data/
+desktop_sil_*.csv

@@ -45,7 +45,8 @@ void AxisController::startGoto(StepCount targetSteps, RateStepsPerSec maxStepsPe
     _targetSteps = targetSteps;
     _maxGotoStepsPerSec = maxStepsPerSec;
 
-    // Reset so we don't burst
+    // Reset scheduling so a newly requested move starts cleanly instead of
+    // trying to catch up on time elapsed during previous work.
     _lastStepMicros = _clock.micros();
 }
 
@@ -83,7 +84,8 @@ bool AxisController::update() {
     }
 
     if (_mode == Mode::Rate) {
-        // RATE mode: step continously at _rateStepsPerSec
+        // Rate mode emits at most one step per update call. The caller keeps
+        // calling update() from loop(), so motion never blocks other work.
         const RateStepsPerSec rate = _rateStepsPerSec;
         const RateStepsPerSec rateAbs = fabsf(rate);
 
@@ -98,7 +100,8 @@ bool AxisController::update() {
 
     // GOTO mode
     if (_mode == Mode::Goto) {
-        // If already at target, stop
+        // Goto mode is also incremental: one due step per call until the
+        // unbounded step counter reaches the requested target.
         if (_posSteps == _targetSteps) {
             _mode = Mode::Idle;
             return false;

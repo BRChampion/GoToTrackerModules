@@ -50,6 +50,7 @@ int main() {
     tracker.setTime(1783353600UL);
 
     runCommand(commands, "help");
+    runCommand(commands, "home");
     runCommand(commands, "target Vega");
     runCommand(commands, "goto");
 
@@ -58,6 +59,16 @@ int main() {
         tracker.update();
     }
 
+    runCommand(commands, "status");
+    runCommand(commands, "nudge alt 2");
+    runCommand(commands, "nudge az -3");
+
+    for (uint16_t i = 0; i < 100; ++i) {
+        clk.advanceMicros(1000UL);
+        tracker.update();
+    }
+
+    runCommand(commands, "cal one-star");
     runCommand(commands, "status");
     runCommand(commands, "track on");
 

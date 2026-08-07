@@ -58,6 +58,14 @@ add_executable(SilTests
 target_include_directories(SilTests PRIVATE core)
 target_link_libraries(SilTests PRIVATE GoToTracker)
 
+add_executable(ShortestPathDemo
+        tests/ShortestPathDemo.cpp
+        core/SimClock.h
+        core/FakeDriver.h
+)
+target_include_directories(ShortestPathDemo PRIVATE core)
+target_link_libraries(ShortestPathDemo PRIVATE GoToTracker)
+
 enable_testing()
 add_test(NAME desktop_sil
          COMMAND SilTests

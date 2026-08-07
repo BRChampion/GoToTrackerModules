@@ -33,6 +33,34 @@ void AltAzTracker::setTarget(SkyMath::EquatorialCoord target) {
     refreshTargetSteps();
 }
 
+void AltAzTracker::manualHome() {
+    // Manual home means the operator has physically placed the mount at the
+    // chosen Alt/Az zero reference, so software can reset both step counters.
+    _tracking = false;
+    _altAxis.stop();
+    _azAxis.stop();
+    _altAxis.setPosSteps(0);
+    _azAxis.setPosSteps(0);
+    _homed = true;
+    _calibrated = false;
+    refreshTargetSteps();
+}
+
+bool AltAzTracker::syncOneStar() {
+    if (!_hasTarget) return false;
+
+    // After the operator centers the selected star, align the software step
+    // position with where that star should be at the current time/location.
+    refreshTargetSteps();
+    _tracking = false;
+    _altAxis.stop();
+    _azAxis.stop();
+    _altAxis.setPosSteps(_altTargetSteps);
+    _azAxis.setPosSteps(_azTargetSteps);
+    _calibrated = true;
+    return true;
+}
+
 void AltAzTracker::startGoto() {
     if (!_hasTarget) return;
     refreshTargetSteps();
@@ -57,6 +85,8 @@ void AltAzTracker::stop() {
 void AltAzTracker::update() {
     const TickMicros now = _clock.micros();
 
+    // Alt/Az tracking changes both axes over time. Refresh the desired target
+    // periodically, then let each AxisController step toward it incrementally.
     if (_tracking && (TickMicros)(now - _lastRefreshMicros) >= _refreshIntervalMicros) {
         _lastRefreshMicros += _refreshIntervalMicros;
         refreshTargetSteps();
@@ -74,6 +104,8 @@ void AltAzTracker::update() {
 }
 
 UnixSeconds AltAzTracker::unixNow() const {
+    // Use elapsed micros since the last time set instead of continuously
+    // mutating epoch time; unsigned subtraction keeps micros rollover safe.
     return _epochUnix + (UnixSeconds)((TickMicros)(_clock.micros() - _epochMicros) / 1000000UL);
 }
 
@@ -91,6 +123,8 @@ StepCount AltAzTracker::nearestWrappedAzTarget(StepCount desiredAzSteps) const {
     const StepCount revSteps = _azModel.stepsPerAxisRevRounded();
     if (revSteps <= 0) return desiredAzSteps;
 
+    // Azimuth is circular. Convert the requested azimuth to the nearest
+    // equivalent unbounded step position so 359 -> 1 degrees moves +2, not -358.
     StepCount currentWrapped = _azAxis.posSteps() % revSteps;
     if (currentWrapped < 0) currentWrapped += revSteps;
 

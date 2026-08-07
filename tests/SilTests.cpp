@@ -414,6 +414,67 @@ void runShortestAzimuthWrapping(TestRun& run) {
     }
 }
 
+void runManualHomeAndOneStarCalibration(TestRun& run) {
+    const MountModel model(200.0f, 16.0f);
+    SimClock clock;
+    FakeDriver altDriver;
+    FakeDriver azDriver;
+    AxisController altAxis(clock, altDriver);
+    AxisController azAxis(clock, azDriver);
+    AltAzTracker tracker(clock, altAxis, azAxis, model, model);
+
+    altAxis.begin();
+    azAxis.begin();
+    altAxis.enable(true);
+    azAxis.enable(true);
+    altAxis.setPosSteps(1234);
+    azAxis.setPosSteps(-987);
+
+    tracker.begin();
+    tracker.setObserver(47.6f, -52.7f);
+    tracker.setTime(1783353600UL);
+
+    tracker.manualHome();
+    run.compare("calibration", "manual_home", "initial_alt=1234;initial_az=-987",
+                "altitude_position", "steps", 0.0, altAxis.posSteps(), 0.0);
+    run.compare("calibration", "manual_home", "initial_alt=1234;initial_az=-987",
+                "azimuth_position", "steps", 0.0, azAxis.posSteps(), 0.0);
+    run.compare("calibration", "manual_home", "initial_alt=1234;initial_az=-987",
+                "homed_flag", "bool", 1.0, tracker.homed() ? 1.0 : 0.0, 0.0);
+    run.compare("calibration", "manual_home", "initial_alt=1234;initial_az=-987",
+                "calibrated_flag", "bool", 0.0,
+                tracker.calibrated() ? 1.0 : 0.0, 0.0);
+
+    const bool syncWithoutTarget = tracker.syncOneStar();
+    run.compare("calibration", "one_star_without_target", "target=none",
+                "sync_result", "bool", 0.0, syncWithoutTarget ? 1.0 : 0.0,
+                0.0);
+
+    const TargetEq& vega = TargetCatalog::get(0U);
+    const SkyMath::EquatorialCoord target = {vega.raHours, vega.decDeg};
+    tracker.setTarget(target);
+
+    altAxis.setPosSteps(41);
+    azAxis.setPosSteps(120);
+    const bool syncWithTarget = tracker.syncOneStar();
+
+    run.compare("calibration", "one_star_sync_vega",
+                "target=Vega;unix=1783353600;lat_deg=47.6;lon_deg=-52.7",
+                "sync_result", "bool", 1.0, syncWithTarget ? 1.0 : 0.0,
+                0.0);
+    run.compare("calibration", "one_star_sync_vega",
+                "target=Vega;unix=1783353600;lat_deg=47.6;lon_deg=-52.7",
+                "altitude_position", "steps", -26.0, altAxis.posSteps(),
+                0.0);
+    run.compare("calibration", "one_star_sync_vega",
+                "target=Vega;unix=1783353600;lat_deg=47.6;lon_deg=-52.7",
+                "azimuth_position", "steps", 88.0, azAxis.posSteps(), 0.0);
+    run.compare("calibration", "one_star_sync_vega",
+                "target=Vega;unix=1783353600;lat_deg=47.6;lon_deg=-52.7",
+                "calibrated_flag", "bool", 1.0,
+                tracker.calibrated() ? 1.0 : 0.0, 0.0);
+}
+
 void runAdditionalTimingCases(TestRun& run) {
     struct TimingCase {
         const char* id;
@@ -555,6 +616,7 @@ int main(int argc, char** argv) {
     runAstronomicalCoordinates(run);
     runAngleWrapping(run);
     runShortestAzimuthWrapping(run);
+    runManualHomeAndOneStarCalibration(run);
     runAdditionalTimingCases(run);
     runCatalogEndToEnd(run);
 
