@@ -91,34 +91,3 @@ goto
 status
 stop
 ```
-
-For one-star calibration, physically center a selected star using signed
-`nudge` commands, then run `sync` or `cal one-star`. Synchronization requires a
-selected target and treats the current physical position as that target's
-calculated Alt/Az position.
-
-The hardware sketch connects the selected logical axis to the real TB6600 and
-uses a no-output driver for the other axis. This allows the same motor and
-driver to test the complete altitude path and then the complete azimuth path.
-
-## Desktop simulation and tests
-
-The desktop build contains SIL coverage for rate and goto motion, timer
-rollover, coordinate conversion, shortest-path azimuth motion, catalog targets,
-and manual home/one-star calibration.
-
-```powershell
-cmake -S . -B build-codex
-cmake --build build-codex
-ctest --test-dir build-codex --output-on-failure
-```
-
-For a terminal demonstration of shortest-path azimuth movement:
-
-```powershell
-.\build-codex\ShortestPathDemo.exe
-```
-
-For a two-axis mount, construct two drivers, controllers, and mount models. The
-optional `AltAzTracker` coordinates both controllers, while `SkyMath` and
-`MountModel` can also be used independently.
